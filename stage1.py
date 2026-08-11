@@ -82,18 +82,21 @@ for val in wavefunction:
     area_under_ψ += (val**2) * dx
 N = area_under_ψ ** 0.5
 
-normalized_wavefunction = wavefunction / N
+normalized_wavefunction = [val/N for val in wavefunction]
 chopped_wavefunction = normalized_wavefunction[100:-100]    # Chopping off the ends for a better plot
 
 print('The energy of the ground state is:', Energy_Ground, '\u210F\u03C9')
 print()
 
 # Plotting the harmonic potential, the ground state wavefunction and the ground state energy against the x-values
+plt.figure(figsize=(16, 9))
 plt.plot(x_axis, V_values, label='Harmonic Potential V(x)', color='black', linestyle='--', linewidth=1)
 plt.plot(x_axis, chopped_wavefunction, label='Ground State Wavefunction \u03A8\u2080(x)', color='blue')
-plt.axhline(Energy_Ground, label='Ground State Energy E\u2080', color='red')
+plt.title('Ground State Wavefunction for a Quantum Harmonic Oscillator')
+plt.axhline(Energy_Ground, label=f'Ground State Energy E\u2080 = {Energy_Ground:5f} \u210F\u03C9', color='red')
 plt.axhline(0, color='black', linewidth=0.75)
 plt.axvline(0, color='black', linewidth=0.75)
 plt.grid(True)
 plt.legend()
+plt.savefig('stage1_plot.png', dpi=400, bbox_inches='tight')
 plt.show()
