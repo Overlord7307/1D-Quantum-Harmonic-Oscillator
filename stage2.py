@@ -109,7 +109,7 @@ def main():
     # Set value of n (state of the system)
     n = 8
 
-    # Create reduced lists of values to plot a limited range from x = -4 to x = +4
+    # Create reduced lists of values to plot a limited range from x = -5 to x = +5
     x_axis = [(i * L) for i in np.arange(-5, 5, dx)]    # Scaling the x-axis back to SI units
     V_values = [(V(x) * m * ω**2) for x in x_axis]
 
