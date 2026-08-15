@@ -1,6 +1,6 @@
-# Quantum Harmonic Oscillator
+# 1D Quantum Harmonic Oscillator
 
-In this project, I have built a quantum harmonic oscillator from scratch in order to numerically calculate its energy eigenvalues and the corresponding wavefunctions. I have divided the project into stages, starting out with calculating the ground state using simple techniques, and increasing in complexity going further.
+In this project, I have built a 1D quantum harmonic oscillator from scratch in order to numerically calculate its energy eigenvalues and the corresponding wavefunctions. I have divided the project into stages, starting out with calculating the ground state using simple techniques, and increasing in complexity going further.
 
 The Hamiltonian for a 1-dimensional QHO is
 
