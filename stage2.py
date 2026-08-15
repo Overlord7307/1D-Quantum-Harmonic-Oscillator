@@ -107,7 +107,7 @@ def bisection_search(func, El:float, Er:float, max_error:float, n:int):
 
 def main():
     # Set value of n (state of the system)
-    n = 8
+    n = 3
 
     # Create reduced lists of values to plot a limited range from x = -5 to x = +5
     x_axis = [(i * L) for i in np.arange(-5, 5, dx)]    # Scaling the x-axis back to SI units
@@ -158,7 +158,7 @@ def main():
 
     ax1.grid(True)
     fig.legend()
-    plt.savefig(f'stage2_plot_n={n}.png', dpi=400, bbox_inches='tight')
+    plt.savefig(f'plots\\stage2_plot_n={n}.png', dpi=400, bbox_inches='tight')
     plt.show()
 
 
