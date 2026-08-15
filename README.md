@@ -32,3 +32,17 @@ $$\psi_{i+1} = 2[(V(x) - E)\mathrm{d}x^2 + 1]\psi_i - \psi_{i-1}.$$
 Finally, we have the relation we need to implement an integrator function in order to iteratively find the values of $\psi(x)$ for all values of $x$.
 
 Our aim now is to use a bisection search to find the correct value of $E$ for which $\psi(x)$ disappears at the boundaries. Since we know that the energy eigenvalues for a QHO are given by $E_n = \left(n + \frac{1}{2}\hbar\omega \right),$ we can set limits for our bisection search at 0 and 1 and be confident that the answer we get will indeed be $E_0$. Once we obtain the correct ground state energy, we can plug that back into the integrator and find the entire wavefunction. After this, plotting $V(x)$, $\psi(x)$ and $E_0$ against $x$ is a trivial matter and can be done easily using Matplotlib.
+
+
+## Stage 2
+
+Our goal for the 2nd stage is firstly, to present the final answers and plots in SI units. To accomplish this, we initially calculate everything in natural units as before, and then scale the results back to SI units for the purposes of plotting by using the following transformations:
+$$x \rightarrow Lx,$$
+$$V(x) \rightarrow m\omega^2V(x),$$
+$$E \rightarrow \hbar\omega E,$$
+$$\psi(x) \rightarrow \frac{\psi(x)}{\sqrt{L}},$$
+where the characteristic length of the harmonic oscillator is $L = \sqrt{\frac{\hbar}{m\omega}}$, and the physical constants $m$, $\hbar$ and $\omega$ must be in SI units.
+
+Second and more importantly, we want to upgrade the physics engine to support higher order eigenvalues and eigenstates. We know that the number of nodes formed by a wavefunction directly corresponds to the state of the system it describes. We can use this property to create a node-counting algorithm which counts the number of nodes for each wavefunction corresponding to every energy value starting from $E = 0$ and increasing by increments of $dE = 0.1$ until the number of nodes surpasses the target $n$ (quantum state) value. Since energy levels are quantized, the number of nodes will jump to the next integer as soon as the test energy exceeds the current state's energy. This will give us an approximate energy bracket around the required node, which we can plug into our bisection search algorithm in order to find the exact energy eigenvalue.
+
+Thus, after implementing this stage we are able to accurately determine and plot the energy eigenvalue and the wavefunction for any given state of the system as long as the wavefunction has sufficient space to go to zero in the boundary conditions we set initially.
