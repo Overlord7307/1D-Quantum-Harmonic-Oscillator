@@ -5,13 +5,13 @@ In this project, I have built a 1D quantum harmonic oscillator from scratch in o
 The Hamiltonian for a 1-dimensional QHO is
 
 $$
-\hat{H} = -\frac{\hbar^2}{2m} \frac{\mathrm{d}^2}{\mathrm{d}x^2} + \hat{V}(x). \tag{1}
+\hat{H} = -\frac{\hbar^2}{2m} \frac{\mathrm{d}^2}{\mathrm{d}x^2} + \hat{V}(x).
 $$
 
 Plugging in the harmonic potential $\hat{V}(x) = \frac{1}{2} m\omega^2\hat{x}^2$ and $\hat{H}$ into the Schrödinger equation $\hat{H}\psi = E\psi$, we get:
 
 $$
--\frac{\hbar^2}{2m}\frac{\mathrm{d}^2\psi}{\mathrm{d}x^2} + \frac{1}{2}m\omega^2x^2\psi = E\psi. \tag{2}
+-\frac{\hbar^2}{2m}\frac{\mathrm{d}^2\psi}{\mathrm{d}x^2} + \frac{1}{2}m\omega^2x^2\psi = E\psi.
 $$
 
 
@@ -20,25 +20,25 @@ $$
 In the first stage, the goal is very simple: to find and plot the ground state energy eigenvalue and ground state wavefunction for the QHO using only pure Python and Matplotlib (little to no usage of NumPy and SciPy). Of course, not using any external libraries means the code will be very inefficient. However, since the calculations are not very complicated, and since the main point here is to understand the physics and the computational methods required for this solution, I'm not very bothered by this. To make things even easier (and to avoid floating point errors), I will also be using **natural units**, i.e. $\hbar = \omega = m = 1$. This means that our final energy will be in terms of units of $\hbar\omega$. Substituting these natural units in the above Schrödinger equation, we get:
 
 $$
--\frac{1}{2} \frac{\mathrm{d}^2\psi}{\mathrm{d}x^2} + \frac{1}{2}x^2\psi = E\psi, \tag{3}
+-\frac{1}{2} \frac{\mathrm{d}^2\psi}{\mathrm{d}x^2} + \frac{1}{2}x^2\psi = E\psi,
 $$
 
 and rearranging we have:
 
 $$
-\frac{\mathrm{d}^2\psi}{\mathrm{d}x^2} = 2(V(x) - E)\psi. \tag{4}
+\frac{\mathrm{d}^2\psi}{\mathrm{d}x^2} = 2(V(x) - E)\psi.
 $$
 
 Now, instead of solving this 2nd order differential equation analytically, which would defeat the whole purpose of the project, we will employ the **finite difference method** for second derivatives. This method provides the following approximation for the second derivative:
 
 $$
-\frac{\mathrm{d}^2\psi}{\mathrm{d}x^2} \approx \frac{\psi_{i+1} - 2\psi_i + \psi_{i-1}}{\mathrm{d}x^2}. \tag{5}
+\frac{\mathrm{d}^2\psi_i}{\mathrm{d}x^2} \approx \frac{\psi_{i+1} - 2\psi_i + \psi_{i-1}}{\mathrm{d}x^2}.
 $$
 
-Substituting into (4) and rearranging the terms, we can calculate the iterative value of $\psi_{i+1}$ using the two previous values:
+Substituting this into the Schrödinger equation and rearranging the terms, we can calculate the iterative value of $\psi_{i+1}$ using the two previous values:
 
 $$
-\psi_{i+1} = 2\left[\left(V(x) - E\right)\mathrm{d}x^2 + 1\right]\psi_i - \psi_{i-1}. \tag{6}
+\psi_{i+1} = 2\left[\left(V(x) - E\right)\mathrm{d}x^2 + 1\right]\psi_i - \psi_{i-1}.
 $$
 
 Finally we have the relation we need to implement an integrator function, in order to iteratively find the values of $\psi(x)$ for all values of $x$.
@@ -64,3 +64,21 @@ where the characteristic length of the harmonic oscillator is $L = \sqrt{\frac{\
 Second and more importantly, we want to upgrade the physics engine to support higher order eigenvalues and eigenstates. We know that the number of nodes formed by a wavefunction directly corresponds to the state of the system it describes. We can use this property to create a node-counting algorithm which counts the number of nodes for each wavefunction corresponding to every energy value starting from $E = 0$ and increasing by increments of $dE = 0.1$ until the number of nodes surpasses the target $n$ (quantum state) value. Since energy levels are quantized, the number of nodes will jump to the next integer as soon as the test energy exceeds the current state's energy. This will give us an approximate energy bracket around the required node, which we can plug into our bisection search algorithm in order to find the exact energy eigenvalue.
 
 Thus, after implementing this stage we are able to accurately determine and plot the energy eigenvalue and the wavefunction for any given state of the system as long as the wavefunction has sufficient space to go to zero in the boundary conditions we set initially.
+
+
+## Stage 3
+
+In stage 3 we rewrite the entire physics engine using NumPy and SciPy which makes the code much more concise and optimized. These libraries allow us to vectorize the space and express the Hamiltonian as a matrix, then directly compute its eigenvalues and eigenvectors using linear algebra. Firstly we use `numpy.linspace()` to generate our $x$-axis as a numpy ndarray. Passing the entire array into $V(x)$ and then into `np.diag()` generates the Potential Energy matrix $\hat{V}$, which is an $N \times N$ diagonal matrix with $V_{ii} = V(x_i)$ as its entries (where $N$ is the number of values in the $x$-axis array).
+
+Next, we construct the Kinetic Energy operator $\hat{K}$. We know that the kinetic energy operator is expressed as $\hat{K} = -\frac{1}{2} \frac{\mathrm{d}^2}{\mathrm{d}x^2}$ in natural units, and previously we have seen that the second derivative of the wavefunction can be approximated as
+
+$$
+\begin{aligned}
+    \frac{\mathrm{d}^2\psi_i}{\mathrm{d}x^2} &\approx \frac{\psi_{i+1} - 2\psi_i + \psi_{i-1}}{\mathrm{d}x^2} \\
+    \implies \hat{K}\psi_i &= -\frac{1}{2} \left(\frac{\psi_{i+1} - 2\psi_i + \psi_{i-1}}{\mathrm{d}x^2} \right).
+\end{aligned}
+$$
+
+Thus, we can express $\hat{K}$ as a tri-diagonal matrix, with the diagonal elements being the coefficients of $\psi_i$, and the upper and lower diagonal elements being the coefficients of $\psi_{i+1}$ and $\psi_{i-1}$ respectively.
+
+Finally, we obtain the total energy operator, also known as the Hamiltonian of the system as an $N \times N$ square matrix, $\hat{H} = \hat{K} + \hat{V}$ which we can pass into `scipy.linalg.eigh` to directly compute all of its energy eigenvalues and eigenstates. Of course, while plotting we scale everything back to SI units using the relations presented in stage 2.

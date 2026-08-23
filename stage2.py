@@ -140,7 +140,7 @@ def main():
     # Plotting the harmonic potential, the nth state wavefunction and the nth state energy against the x-values
 
     fig, ax1 = plt.subplots(figsize=(16, 9))
-    plt.title(f"{n}{'th' if 11 <= n % 100 <= 13 else ('st' if n % 10 == 1 else ('nd' if n % 10 == 2 else ('rd' if n % 10 == 3 else 'th')))} State Wavefunction for a Quantum Harmonic Oscillator")
+    plt.title(f"{n}{'th' if 11 <= n % 100 <= 13 else ('st' if n % 10 == 1 else ('nd' if n % 10 == 2 else ('rd' if n % 10 == 3 else 'th')))} State Wavefunction for a 1D Quantum Harmonic Oscillator")
 
     # Plotting potential and nth state energy
     ax1.plot(x_axis, V_values, label='Harmonic Potential V(x)', color='black', linestyle='--', linewidth=1)
@@ -158,7 +158,7 @@ def main():
 
     ax1.grid(True)
     fig.legend()
-    plt.savefig(f'plots\\stage2_plot_n={n}.png', dpi=400, bbox_inches='tight')
+    plt.savefig(f'plots\\stage2_plots\\stage2_plot_n={n}.png', dpi=400, bbox_inches='tight')
     plt.show()
 
 
