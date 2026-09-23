@@ -82,3 +82,14 @@ $$
 Thus, we can express $\hat{K}$ as a tri-diagonal matrix, with the diagonal elements being the coefficients of $\psi_i$, and the upper and lower diagonal elements being the coefficients of $\psi_{i+1}$ and $\psi_{i-1}$ respectively.
 
 Finally, we obtain the total energy operator, also known as the Hamiltonian of the system as an $N \times N$ square matrix, $\hat{H} = \hat{K} + \hat{V}$ which we can pass into `scipy.linalg.eigh` to directly compute all of its energy eigenvalues and eigenstates. Of course, while plotting we scale everything back to SI units using the relations presented in stage 2.
+
+
+## Anharmonic Potential
+
+Finally, we take what we have from stage 3 and replace the harmonic potential with an anharmonic one:
+
+$$
+\hat{V}(x) = \frac{1}{2}m \omega^2\hat{x}^2 + \alpha \hat{x}^4.
+$$
+
+We are then able to use the exact same mathematical framework as before to numerically calculate the energy eigenvalues and wavefunctions for this modified potential.
